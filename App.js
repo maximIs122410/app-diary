@@ -1,21 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react'
+import AppLoading from 'expo-app-loading'
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+
+import { Provider } from 'react-redux'
+import storeApp from './src/store/index'
+
+import { fontsInit } from './src/common/fonts'
+import { Navigation } from './src/common/navigation'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [isReady, setIsReady] = useState(false)
+
+    if (!isReady) {
+        return (
+            <AppLoading
+                startAsync={fontsInit}
+                onFinish={() => setIsReady(true)}
+                onError={(error) => console.log(error)}
+            />
+        )
+    }
+
+    return (
+        <Provider store={storeApp}>
+            <View style={styles.main}>
+                <Navigation />
+            </View>
+        </Provider>
+    )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    main: {
+        flex: 1,
+        // paddingTop: 48,
+        // paddingBottom: 24,
+    },
+})
